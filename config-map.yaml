@@ -5,7 +5,6 @@ metadata:
   namespace: production
 type: Opaque
 data:
-  DB_HOST: YmlncHJvZGIuY2ZpZ2R3eW1jNnc5LmFwLXNvdXRoZWFzdC0xLnJkcy5hbWF6b25hd3MuY29t
   DB_USER: ZGV2b3BzY2lsc3k=
   DB_PASS: MTIzNDU2Nzg5MA==
   DB_NAME: ZGJzb3NtZWQ=
@@ -20,7 +19,7 @@ metadata:
 data:
   config.php: |
     <?php
-    $db_host = getenv("DB_HOST");
+    $db_host = "bigprodb.cfigdwymc6w9.ap-southeast-1.rds.amazonaws.com";
     $db_user = getenv("DB_USER");
     $db_pass = getenv("DB_PASS");
     $db_name = getenv("DB_NAME");
