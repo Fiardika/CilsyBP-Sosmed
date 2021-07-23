@@ -112,7 +112,7 @@ apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   namespace: production
-  name: pesbuk-service
+  name: ingress
 spec:
   rules:
   - host: pesbuk.fiardika.xyz      
