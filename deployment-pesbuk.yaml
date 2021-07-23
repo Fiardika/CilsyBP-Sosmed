@@ -30,11 +30,6 @@ spec:
           mountPath: "/var/www/html/config.php"
           subPath: "config.php"
         env:
-        - name: DB_HOST
-          valueFrom:
-            secretKeyRef:
-              name: p-secret-fb
-              key: DB_HOST
         - name: DB_USER
           valueFrom:
             secretKeyRef:
