@@ -21,7 +21,7 @@ spec:
             name: p-fb-configmap-secret
       containers:
       - name: pesbuk-deployment
-        image: fiardika/pesbuk-jenkins:latest
+        image: sekolahdevopscilsy/php-sosmed:latest
         ports:
         - containerPort: 80
         volumeMounts:
