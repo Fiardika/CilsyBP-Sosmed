@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pesbuk-deployment
+  namespace: production
+  labels:
+    app: pesbuk-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pesbuk-deployment
+  template:
+    metadata:
+      labels:
+        app: pesbuk-deployment
+    spec:
+      volumes:
+        - name: config-secret
+          configMap:
+            name: p-fb-configmap-secret
+      containers:
+      - name: pesbuk-deployment
+        image: fiardika/pesbuk-jenkins:latest
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: config-secret
+          mountPath: "/var/www/html/config.php"
+          subPath: "config.php"
+        env:
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: p-secret-fb
+              key: DB_HOST
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: p-secret-fb
+              key: DB_USER
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: p-secret-fb
+              key: DB_PASS
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: p-secret-fb
+              key: DB_NAME
+
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: pesbuk-service
+  namespace: production
+spec:
+  selector:
+    app: pesbuk-deployment
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
