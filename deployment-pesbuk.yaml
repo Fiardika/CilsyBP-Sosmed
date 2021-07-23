@@ -22,7 +22,6 @@ spec:
       containers:
       - name: pesbuk-deployment
         image: fiardika/pesbuk-jenkins:latest
-        imagePullPolicy: "Always"
         ports:
         - containerPort: 80
         volumeMounts:
@@ -66,3 +65,40 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: p-fb-configmap-secret
+  namespace: production
+data:
+  config.php: |
+    <?php
+    $db_host = getenv("DB_HOST");
+    $db_user = getenv("DB_USER");
+    $db_pass = getenv("DB_PASS");
+    $db_name = getenv("DB_NAME");
+    try {    
+      //create PDO connection
+      $db = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
+    } catch(PDOException $e) {
+      //show error
+      die("Terjadi masalah: " . $e->getMessage());
+    }
+    ?>
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: p-secret-fb
+  namespace: production
+type: Opaque
+data:
+  DB_HOST: YnBjaWxzeS5jZmlnZHd5bWM2dzkuYXAtc291dGhlYXN0LTEucmRzLmFtYXpvbmF3cy5jb20K
+  DB_USER: ZGV2b3BzY2lsc3kK
+  DB_PASS: MTIzNDU2Nzg5MAo=
+  DB_NAME: ZGJzb3NtZWQK
