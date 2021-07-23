@@ -1,3 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: p-fb-configmap-secret
+  namespace: production
+data:
+  config.php: |
+    <?php
+    $db_host = getenv("DB_HOST");
+    $db_user = getenv("DB_USER");
+    $db_pass = getenv("DB_PASS");
+    $db_name = getenv("DB_NAME");
+    try {    
+      //create PDO connection
+      $db = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
+    } catch(PDOException $e) {
+      //show error
+      die("Terjadi masalah: " . $e->getMessage());
+    }
+    ?>
+    
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: p-secret-fb
+  namespace: production
+type: Opaque
+data:
+  DB_HOST: YmlncHJvZGIuY2ZpZ2R3eW1jNnc5LmFwLXNvdXRoZWFzdC0xLnJkcy5hbWF6b25hd3MuY29tCg==
+  DB_USER: ZGV2b3BzY2lsc3kK
+  DB_PASS: MTIzNDU2Nzg5MAo=
+  DB_NAME: ZGJzb3NtZWQK
+  MYSQL_ROOT_PASSWORD: cGFzc3dvcmQK
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,9 +57,11 @@ spec:
         - name: config-secret
           configMap:
             name: p-fb-configmap-secret
+      terminationGracePeriodSeconds: 30
       containers:
       - name: pesbuk-deployment
-        image: sekolahdevopscilsy/php-sosmed:latest
+        image: fiardika/pesbuk-jenkins:latest
+        imagePullPolicy: "Always"
         ports:
         - containerPort: 80
         volumeMounts:
@@ -68,37 +108,16 @@ spec:
 
 ---
 
-apiVersion: v1
-kind: ConfigMap
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
 metadata:
-  name: p-fb-configmap-secret
   namespace: production
-data:
-  config.php: |
-    <?php
-    $db_host = getenv("DB_HOST");
-    $db_user = getenv("DB_USER");
-    $db_pass = getenv("DB_PASS");
-    $db_name = getenv("DB_NAME");
-    try {    
-      //create PDO connection
-      $db = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
-    } catch(PDOException $e) {
-      //show error
-      die("Terjadi masalah: " . $e->getMessage());
-    }
-    ?>
-
----
-
-apiVersion: v1
-kind: Secret
-metadata:
-  name: p-secret-fb
-  namespace: production
-type: Opaque
-data:
-  DB_HOST: YnBjaWxzeS5jZmlnZHd5bWM2dzkuYXAtc291dGhlYXN0LTEucmRzLmFtYXpvbmF3cy5jb20K
-  DB_USER: ZGV2b3BzY2lsc3kK
-  DB_PASS: MTIzNDU2Nzg5MAo=
-  DB_NAME: ZGJzb3NtZWQK
+  name: pesbuk-service
+spec:
+  rules:
+  - host: pesbuk.fiardika.xyz      
+    http:
+      paths:
+        - backend:
+           serviceName: pesbuk-service
+           servicePort: 80
