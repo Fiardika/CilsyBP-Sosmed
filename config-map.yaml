@@ -5,7 +5,7 @@ metadata:
   namespace: production
 type: Opaque
 data:
-  DB_HOST: dGVzdC1kYi5jZmlnZHd5bWM2dzkuYXAtc291dGhlYXN0LTEucmRzLmFtYXpvbmF3cy5jb20=
+  DB_HOST: YmlncHJvZGIuY2ZpZ2R3eW1jNnc5LmFwLXNvdXRoZWFzdC0xLnJkcy5hbWF6b25hd3MuY29t
   DB_USER: ZGV2b3BzY2lsc3k=
   DB_PASS: MTIzNDU2Nzg5MA==
   DB_NAME: ZGJzb3NtZWQ=
