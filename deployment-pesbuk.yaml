@@ -6,7 +6,7 @@ metadata:
   labels:
     app: pesbuk-deployment
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: pesbuk-deployment
@@ -67,3 +67,77 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
+
+---
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: production
+  annotations:
+     kubernetes.io/ingress.class: "nginx"
+     nginx.ingress.kubernetes.io/affinity: "cookie"
+     nginx.ingress.kubernetes.io/session-cookie-name: "compro-prod-cookie"
+     nginx.ingress.kubernetes.io/session-cookie-expires: "86400"
+     nginx.ingress.kubernetes.io/session-cookie-max-age: "86400"
+     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+     nginx.ingress.kubernetes.io/affinity-mode: persistent
+     nginx.ingress.kubernetes.io/session-cookie-hash: sha1
+spec:
+  rules:
+  - host: pesbuk.fiardika.xyz
+    http:
+      paths:
+        - backend:
+           serviceName: pesbuk-service
+           servicePort: 80
+  - host: fiardika.fiardika.xyz
+    http:
+      paths:
+        - backend:
+           serviceName: landing-page-service
+           servicePort: 80
+  - host: blog.fiardika.xyz
+    http:
+      paths:
+        - backend:
+           serviceName: wordpress-service
+           servicePort: 80
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: p-secret-fb
+  namespace: production
+type: Opaque
+data:
+  DB_HOST: YmlncHJvZGIuY2ZpZ2R3eW1jNnc5LmFwLXNvdXRoZWFzdC0xLnJkcy5hbWF6b25hd3MuY29tCg==
+  DB_USER: ZGV2b3BzY2lsc3kK
+  DB_PASS: MTIzNDU2Nzg5MAo=
+  DB_NAME: ZGJzb3NtZWQK
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: p-fb-configmap-secret
+  namespace: production
+data:
+  config.php: |
+    <?php
+    $db_host = getenv("DB_HOST");
+    $db_user = getenv("DB_USER");
+    $db_pass = getenv("DB_PASS");
+    $db_name = getenv("DB_NAME");
+    try {    
+      //create PDO connection
+      $db = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
+    } catch(PDOException $e) {
+      //show error
+      die("Terjadi masalah: " . $e->getMessage());
+    }
+    ?>
