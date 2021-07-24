@@ -113,10 +113,8 @@ metadata:
   namespace: production
 type: Opaque
 data:
-  DB_HOST: YmlncHJvZGIuY2ZpZ2R3eW1jNnc5LmFwLXNvdXRoZWFzdC0xLnJkcy5hbWF6b25hd3MuY29tCg==
   DB_USER: ZGV2b3BzY2lsc3kK
   DB_PASS: MTIzNDU2Nzg5MAo=
-  DB_NAME: ZGJzb3NtZWQK
 
 ---
 
@@ -128,10 +126,10 @@ metadata:
 data:
   config.php: |
     <?php
-    $db_host = getenv("DB_HOST");
+    $db_host = "bigprodb.cfigdwymc6w9.ap-southeast-1.rds.amazonaws.com";
     $db_user = getenv("DB_USER");
     $db_pass = getenv("DB_PASS");
-    $db_name = getenv("DB_NAME");
+    $db_name = "dbsosmed";
     try {    
       //create PDO connection
       $db = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
