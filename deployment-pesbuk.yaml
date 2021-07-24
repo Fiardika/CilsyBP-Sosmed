@@ -1,3 +1,39 @@
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: p-secret-fb
+  namespace: production
+type: Opaque
+data:
+  DB_USER: ZGV2b3BzY2lsc3kK
+  DB_PASS: MTIzNDU2Nzg5MAo=
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: p-fb-configmap-secret
+  namespace: production
+data:
+  config.php: |
+    <?php
+    $db_host = "bigprodb.cfigdwymc6w9.ap-southeast-1.rds.amazonaws.com";
+    $db_user = getenv("DB_USER");
+    $db_pass = getenv("DB_PASS");
+    $db_name = "dbsosmed";
+    try {    
+      //create PDO connection
+      $db = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
+    } catch(PDOException $e) {
+      //show error
+      die("Terjadi masalah: " . $e->getMessage());
+    }
+    ?>
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -30,11 +66,6 @@ spec:
           mountPath: "/var/www/html/config.php"
           subPath: "config.php"
         env:
-        - name: DB_HOST
-          valueFrom:
-            secretKeyRef:
-              name: p-secret-fb
-              key: DB_HOST
         - name: DB_USER
           valueFrom:
             secretKeyRef:
@@ -45,12 +76,6 @@ spec:
             secretKeyRef:
               name: p-secret-fb
               key: DB_PASS
-        - name: DB_NAME
-          valueFrom:
-            secretKeyRef:
-              name: p-secret-fb
-              key: DB_NAME
-
 
 ---
 
@@ -103,38 +128,3 @@ spec:
         - backend:
            serviceName: wordpress-service
            servicePort: 80
-
----
-
-apiVersion: v1
-kind: Secret
-metadata:
-  name: p-secret-fb
-  namespace: production
-type: Opaque
-data:
-  DB_USER: ZGV2b3BzY2lsc3kK
-  DB_PASS: MTIzNDU2Nzg5MAo=
-
----
-
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: p-fb-configmap-secret
-  namespace: production
-data:
-  config.php: |
-    <?php
-    $db_host = "bigprodb.cfigdwymc6w9.ap-southeast-1.rds.amazonaws.com";
-    $db_user = getenv("DB_USER");
-    $db_pass = getenv("DB_PASS");
-    $db_name = "dbsosmed";
-    try {    
-      //create PDO connection
-      $db = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
-    } catch(PDOException $e) {
-      //show error
-      die("Terjadi masalah: " . $e->getMessage());
-    }
-    ?>
