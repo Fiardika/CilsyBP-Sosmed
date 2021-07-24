@@ -42,7 +42,7 @@ metadata:
   labels:
     app: pesbuk-deployment
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: pesbuk-deployment
