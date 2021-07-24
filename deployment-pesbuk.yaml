@@ -19,7 +19,6 @@ spec:
         - name: config-secret
           configMap:
             name: p-fb-configmap-secret
-      terminationGracePeriodSeconds: 30
       containers:
       - name: pesbuk-deployment
         image: fiardika/pesbuk-jenkins:latest
