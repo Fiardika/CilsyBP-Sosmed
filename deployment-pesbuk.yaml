@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  namespace: prod-sosmed
+  namespace: stag-sosmed
   name: p-secret-fb
 type: Opaque
 data:
@@ -14,7 +14,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: prod-sosmed
+  namespace: stag-sosmed
   name: p-fb-configmap-secret
 data:
   config.php: |
@@ -22,7 +22,7 @@ data:
     $db_host = "database-cilsy.cfigdwymc6w9.ap-southeast-1.rds.amazonaws.com";
     $db_user = getenv("DB_USER");
     $db_pass = getenv("DB_PASS");
-    $db_name = "dbsosmed";
+    $db_name = "dbsosmed_staging";
     try {    
       //create PDO connection
       $db = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
@@ -37,7 +37,7 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: prod-sosmed
+  namespace: stag-sosmed
   name: pesbuk-deployment
   labels:
     app: pesbuk-deployment
@@ -82,7 +82,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  namespace: prod-sosmed
+  namespace: stag-sosmed
   name: pesbuk-service
 spec:
   selector:
@@ -97,11 +97,11 @@ spec:
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  namespace: prod-sosmed
+  namespace: stag-sosmed
   name: ingress
 spec:
   rules:
-  - host: pesbuk.fiardika.xyz
+  - host: pesbuk-staging.fiardika.xyz
     http:
       paths:
         - backend:
