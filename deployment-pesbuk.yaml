@@ -67,19 +67,3 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
-
----
-
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  namespace: production
-  name: ingress
-spec:
-  rules:
-  - host: pesbuk.fiardika.xyz      
-    http:
-      paths:
-        - backend:
-           serviceName: pesbuk-service
-           servicePort: 80
