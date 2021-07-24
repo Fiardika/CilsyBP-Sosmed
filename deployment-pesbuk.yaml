@@ -20,8 +20,8 @@ data:
   config.php: |
     <?php
     $db_host = "bigprodb.cfigdwymc6w9.ap-southeast-1.rds.amazonaws.com";
-    $db_user = getenv("DB_USER");
-    $db_pass = getenv("DB_PASS");
+    $db_user = "devopscilsy";
+    $db_pass = "1234567890";
     $db_name = "dbsosmed";
     try {    
       //create PDO connection
@@ -115,16 +115,4 @@ spec:
       paths:
         - backend:
            serviceName: pesbuk-service
-           servicePort: 80
-  - host: fiardika.fiardika.xyz
-    http:
-      paths:
-        - backend:
-           serviceName: landing-page-service
-           servicePort: 80
-  - host: blog.fiardika.xyz
-    http:
-      paths:
-        - backend:
-           serviceName: wordpress-service
            servicePort: 80
