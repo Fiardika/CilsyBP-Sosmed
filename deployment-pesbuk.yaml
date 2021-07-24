@@ -99,6 +99,15 @@ kind: Ingress
 metadata:
   namespace: prod-sosmed
   name: ingress
+  annotations:
+     kubernetes.io/ingress.class: "nginx"
+     nginx.ingress.kubernetes.io/affinity: "cookie"
+     nginx.ingress.kubernetes.io/session-cookie-name: "prod-sosmed-cookie"
+     nginx.ingress.kubernetes.io/session-cookie-expires: "86400"
+     nginx.ingress.kubernetes.io/session-cookie-max-age: "86400"
+     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+     nginx.ingress.kubernetes.io/affinity-mode: persistent
+     nginx.ingress.kubernetes.io/session-cookie-hash: sha1
 spec:
   rules:
   - host: pesbuk.fiardika.xyz
