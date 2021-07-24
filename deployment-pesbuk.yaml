@@ -6,8 +6,8 @@ metadata:
   namespace: production
 type: Opaque
 data:
-  DB_USER: ZGV2b3BzY2lsc3kK
-  DB_PASS: MTIzNDU2Nzg5MAo=
+  DB_USER: ZGV2b3BzY2lsc3k=
+  DB_PASS: MTIzNDU2Nzg5MA==
 
 ---
 
@@ -20,8 +20,8 @@ data:
   config.php: |
     <?php
     $db_host = "bigprodb.cfigdwymc6w9.ap-southeast-1.rds.amazonaws.com";
-    $db_user = "devopscilsy";
-    $db_pass = "1234567890";
+    $db_user = getenv("DB_USER");
+    $db_pass = getenv("DB_PASS");
     $db_name = "dbsosmed";
     try {    
       //create PDO connection
