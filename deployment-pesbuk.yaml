@@ -14,7 +14,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: stag-sosmed
+  namespace: prod-sosmed
   name: p-fb-configmap-secret
 data:
   config.php: |
